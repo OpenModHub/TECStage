@@ -1,15 +1,13 @@
 
-# TEC sample stage   [![CC BY-NC-SA 4.0][cc-by-nc-sa-shield]][cc-by-nc-sa]
+# Temperature controlled sample stage   [![CC BY-NC-SA 4.0][cc-by-nc-sa-shield]][cc-by-nc-sa]
 
 Here, we provide software and hardware design to build a thermoelectric cooler/heater (TEC) sample stage with precision temperature control.
 The design can be modified to fit any instrument. Our implementation is compatible with [neaSNOM/neaSCOPE](https://www.neaspec.com/) microscopes.
 
 ## Software installation
 
-This software was designed to run on Windows 10. However, we used Python modules that should allow cross-platform 
-operation.
-
-⚠️ COM port listing: when using other operation systems, please modify the COM port addressing part of the code accordingly
+This software was designed in Python allows cross-platform 
+operation. The current version was tested under windows 10/11 and macOS Tahoe 26.6.2
 
 We suggest to install the software in a new Python environment as follows:
 
@@ -20,7 +18,7 @@ The [pyMeCom](https://github.com/spomjaksilp/pyMeCom) Python module for the comm
 ```
 (base) > conda activate <environment_name>
 (<environment_name>) > conda install pip
-(<environment_name>) > pip install git+https://github.com/spomjaksilp/pyMeCom.git
+(<environment_name>) > pip install git+https://github.com/meerstetter/pyMeCom.git
 ```
 
 Launch the main application file:
@@ -33,9 +31,16 @@ Launch the main application file:
 ## Main parts
 
 - Custom-made microscope stage: [aluminum frame](CAD/frame.stl) and [heatsink](https://hu.rs-online.com/web/p/hutobordak/5040772?gb=b)
-- Peltier element (Thorlabs [TECD2S](https://www.thorlabs.com/thorproduct.cfm?partnumber=TECD2S) and [TECF2S](https://www.thorlabs.com/thorproduct.cfm?partnumber=TECF2S))
-- Peltier/TEC controller ([Meerstetter TEC-1091 (±4 A / ±21 V)](https://www.meerstetter.ch/products/tec-controllers/tec-1091))
+- Heating/Cooling element:
+    - Peltier element (e.g. Thorlabs [TECD2S](https://www.thorlabs.com/thorproduct.cfm?partnumber=TECD2S) and [TECF2S](https://www.thorlabs.com/thorproduct.cfm?partnumber=TECF2S)): $10^\circ C<T<70^\circ C$
+    - Resistive heater (e.g. Thorlabs [HT24S 24W ceramic heater](https://www.thorlabs.com/item/HT24S)): $T>70^\circ C$
+
+- Temperature controller ([Meerstetter TEC-1091 (±4 A / ±21 V)](https://www.meerstetter.ch/products/tec-controllers/tec-1091))
 - Plastic box with connectors ([ElectronicsBox.stl](CAD/ElectronicsBox.stl) and [topCover.stl](CAD/topCover.stl) file)
+
+<blockquote style="background-color: #b00020;">
+For application involving temperature higher then 60-70 C we suggest to use Resistive heaters OR Peltier stages WITHOUT side-sealing. The polymer used for the sealing releases acetic-acid than can damage optics and samples.
+</blockquote>
 
 
 ## Electronics
@@ -81,6 +86,9 @@ We provide here the two config files in this repository /Software/tecd2s_paramet
 
 The CAD files to build the sample stage with two, replaceable Peltier elements are in the CAD directory. 
 In v1.0 we modified a [commercial heatsink](https://hu.rs-online.com/web/p/hutobordak/5040772?gb=b) to dissipate the heat when cooling, which is integrated with the sample stage as the image shows below.
+
+> **Note**:
+> Upon cooling, you have to dissipate the heat that is pumped from the cool to the hot side of the peltier. This passive heat think gives only a limited dissipation, thus you cannot utilize the full range of $\Delta T$ of the peltier. In our setup the lowest stable temperature is around 10C. Cooling performance can be improved by a liquid-cooled sample stage.
 
 ![stage](/Images/heaterStage_hardware.png)
 
